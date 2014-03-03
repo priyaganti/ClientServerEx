@@ -1,0 +1,42 @@
+<html>
+<head>
+<title>Payment</title>
+</head>
+<body>
+<h2>PaymentOptions</h2>
+<form action="/validate" method="post">
+Select Card: <select>
+<option value="visa">Visa</option>
+  <option value="master">Master Card</option>
+  <option value="american">American Express</option>
+  <option value="discover">Discover</option>
+  </select><br><br>
+Card Number: <input type="text" name="cardNumber" id="number"></input><br><br>
+Expiration date: <select>
+  <option value="mn1">January</option>
+  <option value="mn2">February</option>
+  <option value="mn3">March</option>
+  <option value="mn4">April</option>
+  <option value="mn5">May</option>
+  <option value="mn6">June</option>
+  <option value="mn7">July</option>
+  <option value="mn8">August</option>
+  <option value="mn9">September</option>
+  <option value="mn10">October</option>
+  <option value="mn11">November</option>
+   <option value="mn12">December</option>
+   <select>
+<select>
+ <option value="yr1">2013</option>
+  <option value="yr2">2015</option>
+  <option value="yr3">2016</option>
+  <option value="yr4">2017</option>
+  <option value="yr5">2018</option>
+  <option value="yr6">2019</option>
+  <option value="yr7">2020</option>
+  <select> 
+ <br><br>
+Verification Code: <input type="text" name="verifyCode" id="code"></input>
+<input type="submit" name="submit" value="Pay"/>
+</body>
+</html>
