@@ -19,23 +19,7 @@ app.configure(function () {
 	app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
 });
 
-/*app.get('/login', function (req, res) {
-	ejs.renderFile('login.ejs',
-			{title : title, data : data},
-			function(err, result) {
-				// render on success
-				if (!err) {
-					res.end(result);
-				}
-				// render or error
-				else {
-					res.end('An error occurred');
-					console.log(err);
-				}
-			});
-});
 
- */
 //Inside Login page when click SignIn go to Home page, when click sign up take to SignUp form 
 
 app.get('/loginPage', function (req, res) {
@@ -56,14 +40,15 @@ app.get('/loginPage', function (req, res) {
 
 app.post('/validate', function (req, res) {
 	console.log('in /Home page after clicking Sign in from login');
-	if (user in userCache) {
+	/*if (user in userCache) {
 		//check and validate password {'username': 'password'}
 		if (pw == userCache[user]) {
 			//fetchuser call.
 		}
-	} else {}
+	} else {} */
 	mysql.validateUser(function(err,results){
 		if(err){
+			console.log("error wrong password");
 			ejs.renderFile('InvalidUser.ejs',
 					{title : title, data : data},
 					function(err, result) {
@@ -82,12 +67,11 @@ app.post('/validate', function (req, res) {
 			//put the user in cache
 			//if the cache is already at it's capacity(100), then evict existing users in the cache.
 			//eviction policy -- that's what defines your caching algorithm.
-			userCache[user] = pw
+			//userCache[user] = pw
 			mysql.fetchProducts(function(err,results){
 				if(err){
 					console.log('No products found');
-				}	
-				else{
+				}else{
 					ejs.renderFile('home.ejs',
 							{R: results, P_name : results[0].P_name, P_description : results[0].P_description, P_price : results[0].P_price},
 							function(err, result) {
@@ -104,7 +88,8 @@ app.post('/validate', function (req, res) {
 				}
 			});
 		}
-	},req.param('prodName'),req.param('prodDescription'),req.param('prodPrice'));
+	},req.param('userName'),req.param('Password'));
+	//},req.param('prodName'),req.param('prodDescription'),req.param('prodPrice'));
 
 });
 
@@ -150,19 +135,32 @@ app.post('/home', function (req, res) {
 
 });
 
-/*app.post('/validate', function (req, res) {
-	console.log('in /validate post');
-	if(!req.body.hasOwnProperty('userName') ||!req.body.hasOwnProperty('password')) {
-		res.statusCode = 400;
-		return res.send('Error 400: Post syntax incorrect.');
-	}	
-	mysql.fetchData(function(err,results){
-		console.log('in fetchData');
+
+
+app.get('/addToCart', function (req, res) {
+	ejs.renderFile('displayShoppingCart.ejs',
+			{title : title, data : data},
+			function(err, result) {
+				// render on success
+				if (!err) {
+					res.end(result);
+				}
+				// render or error
+				else {
+					res.end('An error occurred');
+					console.log(err);
+				}
+			});
+});
+
+app.post('/addToCart', function (req, res) {
+	console.log('Clicked on Add to cart going to Shopping Cart');
+	mysql.fetchShoppingCart(function(err,results){
 		if(err){
 			throw err;
 		}else{
-			ejs.renderFile('result.ejs',
-					{fname : results[0].fname, lname : results[0].lname, pass : results[0].pass, email : results[0].email },
+			ejs.renderFile('displayShoppingCart.ejs',
+					{P: results, P_name : P[0].P_name, S_uname : P[0].S_uname, S_quantity : P[0].S_quantity, S_price : P[0].S_price},
 					function(err, result) {
 						// render on success
 						if (!err) {
@@ -175,12 +173,13 @@ app.post('/home', function (req, res) {
 						}
 					});
 		}
-
-	},req.param('userName'),req.param('password'));
+	});
 
 });
 
- */
-
-
 app.listen(4242);
+
+
+
+
+

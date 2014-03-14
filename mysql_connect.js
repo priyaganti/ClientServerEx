@@ -29,7 +29,7 @@ function connect() {
 function insertAndQuery(callback,firstName,lastName,password,emailId){
 	var mysql      = require('mysql');
 	var connection = mysql.createConnection({
-		
+
 	});
 
 	connection.connect();
@@ -85,14 +85,14 @@ function insertNewUser(callback,firstName,lastName,userName,emailId,password)
 		console.log(results);
 		callback(err,results);
 	});
-	}
+}
 
 
 
-function validateUser(callback,loginUserName,loginPassword)
+function validateUser(callback,userName,Password)
 {
 	var mysql = require('mysql');
-	console.log("Password: " + loginPassword +"userName: " + loginUserName);
+	console.log("Password: " + Password +"UserName: " + userName);
 	var connection = mysql.createConnection({
 		host     : 'localhost',
 		user     : 'root',
@@ -101,7 +101,7 @@ function validateUser(callback,loginUserName,loginPassword)
 		database: 'test'
 	});
 	connection.connect();
-	var sql = "SELECT * FROM USER WHERE uname ='"+loginUserName+"' and pass = '"+loginPassword+"'";
+	var sql = "SELECT * FROM USER WHERE uname ='"+userName+"' and pass = '"+Password+"'";
 	console.log(sql);
 	connection.query(sql, function(err, results) {
 		if (err) {
@@ -110,8 +110,30 @@ function validateUser(callback,loginUserName,loginPassword)
 		console.log(results);
 		callback(err,results);
 	});
-	}
+}
 
+function fetchProducts(callback){
+	var mysql      = require('mysql');
+	console.log("Inside fetchProducts method");
+	var connection = mysql.createConnection({
+		host     : 'localhost',
+		user     : 'root',
+		password : 'education9',
+		port: '3306',
+		database: 'test'
+	});
+
+	connection.connect();
+	var sql = 'SELECT P_name,P_description, P_price FROM Product';
+	connection.query(sql, function(err, rows, fields){
+		if(rows.length!==0){
+			console.log("DATA : "+JSON.stringify(rows));
+			callback(err, rows);
+		}
+	});
+}
+
+/*
 function fetchProducts(callback,prodName,prodDescription,prodPrice){
 	var mysql      = require('mysql');
 	console.log("Product Name: " + prodName + "Product Description: " + prodDescription + "Product Price: " + prodPrice);
@@ -133,9 +155,49 @@ function fetchProducts(callback,prodName,prodDescription,prodPrice){
 	});
 }
 
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function fetchShoppingCart(callback){
+	var mysql      = require('mysql');
+	console.log("In shopping cart");
+	var connection = mysql.createConnection({
+		host     : 'localhost',
+		user     : 'root',
+		password : 'education9',
+		port: '3306',
+		database: 'test'
+	});
+
+	connection.connect();
+	var sql = 'SELECT P_name,S_uname,S_Quantity,S_price FROM ShoppingCart';
+	connection.query(sql, function(err, rows, fields){
+		if(rows.length!==0){
+			console.log("DATA : "+JSON.stringify(rows));
+			callback(err, rows);
+		}
+	});
+}
+
+
 exports.connect = connect;
 exports.insertAndQuery = insertAndQuery;
 exports.fetchData = fetchData;
 exports.insertNewUser = insertNewUser;
 exports.validateUser = validateUser;
 exports.fetchProducts = fetchProducts;
+exports.fetchShoppingCart = fetchShoppingCart;
