@@ -31,7 +31,7 @@ app.get('/loginPage', function (req, res) {
 					res.end(result);
 				}
 				// render or error
-				else {
+				else {	
 					res.end('An error occurred');
 					console.log(err);
 				}
@@ -148,7 +148,7 @@ app.post('/home', function (req, res) {
 
 //SHOPPING CART
 app.post('/addToCart', function (req, res) {
-	console.log('Clicked on Add to cart going to Shopping Cart');
+	console.log(req.param("R[i].P_name"));
 	mysql.fetchShoppingCart(function(err,results){
 		if(err){
 			throw err;

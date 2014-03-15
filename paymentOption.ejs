@@ -6,9 +6,12 @@
    function validateNum()
     {
     var z = document.getElementById("cardNum").value;
-    if(!z.match(/^\d{16}/))
+    if(!z.match(/^\d{16}/) || z.length >16)
        {
         alert("Please Enter 16 digits Card Number ! ");
+       }
+       else{
+       alert("Your card is valid");
        }
      }
   </script>
@@ -47,6 +50,7 @@ Expiration date: <select>
    </select>
 <select>
  <option value="yr1">2013</option>
+  <option value="yr8">2014</option>
   <option value="yr2">2015</option>
   <option value="yr3">2016</option>
   <option value="yr4">2017</option>

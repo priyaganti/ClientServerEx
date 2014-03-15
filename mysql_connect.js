@@ -148,17 +148,34 @@ function fetchShoppingCart(callback){
 	});
 }
 
-/*function validateCreditCard(callback, cardNumber){
-	console.log("In credit card method");
-	var length = 16;
-	//Take only numbers in the field
-	//if(cardNumber.length < length)
-	//throw error
-	
-	}
-	*/
 
-//exports.validateCrediCard = validateCreditCard;
+/*function getProductNames(callback){
+	var mysql      = require('mysql');
+	console.log("In product names");
+	var connection = mysql.createConnection({
+		host     : 'localhost',
+		user     : 'root',
+		password : 'education9',
+		port: '3306',
+		database: 'test'
+	});
+
+	connection.connect();
+	var sql = 'SELECT P_name FROM Product';
+	connection.query(sql, function(err, rows, fields){
+		if(rows.length!==0){
+			console.log("DATA : "+JSON.stringify(rows));
+			callback(err, rows);
+		}
+	});
+}
+
+*/
+
+
+
+
+
 exports.connect = connect;
 exports.insertNewUser = insertNewUser;
 exports.validateUser = validateUser;
