@@ -10,7 +10,6 @@ padding:2px;
 </head>
 <body>
 
-</form>
 <form action="/loginPage">
 <input type="submit" name="submit" value="Sign Out" style="float:right;"/>
 </form>
@@ -27,6 +26,7 @@ padding:2px;
    <td><%=R[i].P_price%></td>
    <td>
    Quantity: <select>
+   <option value="q0">0</option>
   <option value="q1">1</option>
   <option value="q2">2</option>
   <option value="q3">3</option>
@@ -38,15 +38,16 @@ padding:2px;
   <option value="q9">9</option>
   <option value="q10">10</option>
   </select>
-  </td>
-  </form>
-  <form action="/addToCart" method="POST">
-   <td><input type="submit" name="cartsubmit" value="Add to Cart"/></td>
-  </form>
-   
+  </td>  
 </tr>
 <% } %>
 </table>
+</form>
+
+ </form>
+  <form action="/addToCart" method="POST">
+   <input type="submit" name="cartsubmit" value="Add to Cart"/>
+  </form>
 
 
 </body>

@@ -171,6 +171,45 @@ app.post('/addToCart', function (req, res) {
 
 });
 
+//from shoppingcart page checkout button to payment options page
+app.post('/checkout', function (req, res) {
+	console.log('in checkout post method');
+	ejs.renderFile('paymentOption.ejs',
+			{title:title, data:data},
+			function(err, result) {
+				// render on success
+				if (!err) {
+					res.end(result);
+				}
+				// render or error
+				else {
+					res.end('An error occurred');
+					console.log(err);
+				}	
+			});
+
+});
+
+app.post('/payment', function (req, res) {
+	console.log('in payment post method');
+	ejs.renderFile('shoppinSucessful.ejs',
+			{title:title, data:data},
+			function(err, result) {
+				// render on success
+				if (!err) {
+					res.end(result);
+				}
+				// render or error
+				else {
+					res.end('An error occurred');
+					console.log(err);
+				}	
+			});
+
+});
+
+
+
 app.listen(4242);
 
 

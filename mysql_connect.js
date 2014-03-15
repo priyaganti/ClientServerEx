@@ -148,7 +148,19 @@ function fetchShoppingCart(callback){
 	});
 }
 
+function validateCreditCard(callback){
+	console.log("In credit card method");
+	var length = 16;
+	//Take only numbers in the field
+	//if(cardNumber.length < length)
+	//throw error
+	
+	}
 
+
+
+
+exports.validateCrediCard = validateCreditCard;
 exports.connect = connect;
 exports.insertNewUser = insertNewUser;
 exports.validateUser = validateUser;

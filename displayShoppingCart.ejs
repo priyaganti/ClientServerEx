@@ -3,6 +3,11 @@
 <title>homePage</title>
 </head>
 <body>
+
+<form action="/loginPage">
+<input type="submit" name="submit" value="Sign Out" style="float:right;"/>
+</form>
+
 <form action="/addToCart">
 <h2>Welcome to your Shopping Cart</h2>
 <table border="1" style="width:700px">
@@ -12,9 +17,16 @@
   <td><%=R[i].S_uname%>&nbsp;&nbsp;&nbsp;&nbsp;</td>
    <td><%=R[i].S_quantity%></td>
     <td><%=R[i].S_price%></td>
-   
 </tr>
 <% } %>
 </table>
 </form>
+<div style="float: left">
+   <input type="submit" name="editCart" value="Edit Cart"/>&nbsp;&nbsp;&nbsp;&nbsp;
+   <div style="float: right">
+  <form action="/checkout" method="POST">
+   <input type="submit" name="checkoutBtn" value="Proceed to Checkout"/>
+  </form>
 
+</body>
+</html>

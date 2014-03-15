@@ -3,8 +3,13 @@
 <title>Payment</title>
 </head>
 <body>
+
+<form action="/loginPage">
+<input type="submit" name="submit" value="Sign Out" style="float:right;"/>
+</form>
+
 <h2>PaymentOptions</h2>
-<form action="/validate" method="post">
+<form action="/checkout" method="post">
 Select Card: <select>
 <option value="visa">Visa</option>
   <option value="master">Master Card</option>
@@ -25,7 +30,7 @@ Expiration date: <select>
   <option value="mn10">October</option>
   <option value="mn11">November</option>
    <option value="mn12">December</option>
-   <select>
+   </select>
 <select>
  <option value="yr1">2013</option>
   <option value="yr2">2015</option>
@@ -34,9 +39,12 @@ Expiration date: <select>
   <option value="yr5">2018</option>
   <option value="yr6">2019</option>
   <option value="yr7">2020</option>
-  <select> 
+  </select> 
  <br><br>
-Verification Code: <input type="text" name="verifyCode" id="code"></input>
-<input type="submit" name="submit" value="Pay"/>
+Verification Code: <input type="text" name="verifyCode" id="code"></input><br><br>
+</form>
+<form action="/payment" method="POST">
+<input type="submit" name="submit" value="Payment"/>
+</form>
 </body>
 </html>
