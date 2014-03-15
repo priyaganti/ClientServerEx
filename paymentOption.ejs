@@ -1,6 +1,17 @@
 <html>
 <head>
 <title>Payment</title>
+
+<script>
+   function validateNum()
+    {
+    var z = document.getElementById("cardNum").value;
+    if(!z.match(/^\d{16}/))
+       {
+        alert("Please Enter 16 digits Card Number ! ");
+       }
+     }
+  </script>
 </head>
 <body>
 
@@ -16,7 +27,10 @@ Select Card: <select>
   <option value="american">American Express</option>
   <option value="discover">Discover</option>
   </select><br><br>
-Card Number: <input type="text" name="cardNumber" id="number"></input><br><br>
+  <form>
+Card Number: <input type="text" name="cardNumber" id="cardNum"></input>
+<input type="submit" name="validate" value="ValidateCard" onclick="validateNum()" style="display: inline;"/>
+</form>
 Expiration date: <select>
   <option value="mn1">January</option>
   <option value="mn2">February</option>
