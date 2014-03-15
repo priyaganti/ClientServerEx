@@ -9,14 +9,16 @@ padding:2px;
 </style>
 </head>
 <body>
+
+</form>
+<form action="/loginPage">
 <input type="submit" name="submit" value="Sign Out" style="float:right;"/>
+</form>
+
 <h2>Hello, Welcome to the Online Store!</h2>
 <form action="/home" method="post">
 <p>Here are the available products<p>
-</form>
-<form action="/loginPage">
-</form>
-<form action=/addToCart">
+
 <table border="1" style="width:700px">
 <% for (var i=0; i<R.length; i++) { %>
 <tr>
@@ -37,12 +39,15 @@ padding:2px;
   <option value="q10">10</option>
   </select>
   </td>
+  </form>
+  <form action="/addToCart">
    <td><input type="submit" name="cartsubmit" value="Add to Cart"/></td>
+  </form>
    
 </tr>
 <% } %>
 </table>
-</form>
+
 
 </body>
 </html>

@@ -38,6 +38,7 @@ app.get('/loginPage', function (req, res) {
 			});
 });
 
+
 app.post('/validate', function (req, res) {
 	console.log('in /Home page after clicking Sign in from login');
 	/*if (user in userCache) {
@@ -45,7 +46,7 @@ app.post('/validate', function (req, res) {
 		if (pw == userCache[user]) {
 			//fetchuser call.
 		}
-	} else {} */
+	} */ 
 	mysql.validateUser(function(err,results){
 		if(err){
 			console.log("error wrong password");
@@ -93,7 +94,8 @@ app.post('/validate', function (req, res) {
 
 });
 
-//loading the table with SignUp fields
+
+//Display the signup page
 app.get('/signUp', function (req, res) {
 	ejs.renderFile('signUp.ejs',
 			{title : title, data : data},
@@ -110,49 +112,41 @@ app.get('/signUp', function (req, res) {
 			});
 });
 
-
+//Display Home page after signup
 app.post('/home', function (req, res) {
 	console.log('just Signed up and now Logged in Home page');
 	mysql.insertNewUser(function(err,results){
 		if(err){
 			throw err;
 		}else{
-			ejs.renderFile('home.ejs',
-					{title : title, data : data},
-					function(err, result) {
-						// render on success
-						if (!err) {
-							res.end(result);
-						}
-						// render or error
-						else {
-							res.end('An error occurred');
-							console.log(err);
-						}
-					});
+			mysql.fetchProducts(function(err,results){
+				if(err){
+					console.log('No products found');
+				}else{
+
+					ejs.renderFile('home.ejs',
+							{R: results, P_name : results[0].P_name, P_description : results[0].P_description, P_price : results[0].P_price},
+							function(err, result) {
+								// render on success
+								if (!err) {
+									res.end(result);
+								}
+								// render or error
+								else {
+									res.end('An error occurred');
+									console.log(err);
+								}
+							});
+				}	
+			});
 		}
+
 	},req.param('firstName'),req.param('lastName'),req.param('userName'),req.param('emailId'),req.param('password'));
 
 });
 
 
-
-app.get('/addToCart', function (req, res) {
-	ejs.renderFile('displayShoppingCart.ejs',
-			{title : title, data : data},
-			function(err, result) {
-				// render on success
-				if (!err) {
-					res.end(result);
-				}
-				// render or error
-				else {
-					res.end('An error occurred');
-					console.log(err);
-				}
-			});
-});
-
+//SHOPPING CART
 app.post('/addToCart', function (req, res) {
 	console.log('Clicked on Add to cart going to Shopping Cart');
 	mysql.fetchShoppingCart(function(err,results){
@@ -160,7 +154,7 @@ app.post('/addToCart', function (req, res) {
 			throw err;
 		}else{
 			ejs.renderFile('displayShoppingCart.ejs',
-					{P: results, P_name : P[0].P_name, S_uname : P[0].S_uname, S_quantity : P[0].S_quantity, S_price : P[0].S_price},
+					{R: results, P_name : results[0].P_name, S_uname : results[0].S_uname, S_quantity : results[0].S_quantity, S_price : results[0].S_price},
 					function(err, result) {
 						// render on success
 						if (!err) {
