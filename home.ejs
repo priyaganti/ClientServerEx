@@ -20,19 +20,23 @@ padding:2px;
 
 <table border="1" style="width:700px">
 <tr>
+  <th>Product ID</th>
   <th>Product Name</th>
   <th>Description</th>
   <th>Price</th>
+  <th>Available Quantity</th>
   <th>Buy Quantity</th>
   
 </tr>
 <% for (var i=0; i<R.length; i++) { %>
 <tr>
+  <td><%=R[i].P_Id%>&nbsp;</td>
   <td><%=R[i].P_name%>&nbsp;</td>
   <td><%=R[i].P_description%>&nbsp;&nbsp;&nbsp;&nbsp;</td>
    <td><%=R[i].P_price%></td>
+   <td><%=R[i].P_quantity%></td>
    <td>
-   Qty: <select name="<%=R[i].P_name%>">
+   Qty: <select name="<%=R[i].P_Id%>">
    <option value="0">0</option>
    <option value="1">1</option>
   <option value="2">2</option>

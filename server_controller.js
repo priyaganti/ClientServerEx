@@ -1,7 +1,8 @@
 var application_root = __dirname,
 express = require("express"),
 path = require("path"),
-ejs = require("ejs");
+ejs = require("ejs"),
+async = require("async");
 var app = express();
 var request = require("request");
 var mysql = require("./mysql_connect");
@@ -74,7 +75,7 @@ app.post('/validate', function (req, res) {
 					console.log('No products found');
 				}else{
 					ejs.renderFile('home.ejs',
-							{R: results, P_name : results[0].P_name, P_description : results[0].P_description, P_price : results[0].P_price},
+							{R: results, P_Id : results[0].P_Id, P_name : results[0].P_name, P_description : results[0].P_description, P_price : results[0].P_price, P_quantity : results[0].P_quantity},
 							function(err, result) {
 								// render on success
 								if (!err) {
@@ -125,7 +126,7 @@ app.post('/home', function (req, res) {
 				}else{
 
 					ejs.renderFile('home.ejs',
-							{R: results, P_name : results[0].P_name, P_description : results[0].P_description, P_price : results[0].P_price},
+							{R: results, P_Id : results[0].P_Id, P_name : results[0].P_name, P_description : results[0].P_description, P_price : results[0].P_price},
 							function(err, result) {
 								// render on success
 								if (!err) {
@@ -146,30 +147,51 @@ app.post('/home', function (req, res) {
 });
 
 
-//SHOPPING CART
-app.post('/addToCart', function (req, res) {
-	console.log(req.param("R[i].P_name"));
-	mysql.fetchShoppingCart(function(err,results){
-		if(err){
-			throw err;
-		}else{
-			ejs.renderFile('displayShoppingCart.ejs',
-					{R: results, P_name : results[0].P_name, S_uname : results[0].S_uname, S_quantity : results[0].S_quantity, S_price : results[0].S_price},
-					function(err, result) {
-						// render on success
-						if (!err) {
-							res.end(result);
-						}
-						// render or error
-						else {
-							res.end('An error occurred');
-							console.log(err);
-						}
-					});
+//Sujeet's help code SHOPPING CART 
+/*app.post('/addToCart', function (req, res) {
+	mysql.fetchProducts(function(err,results){
+		var tmp = [];
+		for(var i=0; i<results.length; i++) {
+			tmp.push([results[i].P_name,results[i].P_price,results[i].P_quantity, req.param(results[i])]);
+			//mysql.addToCart(results[i], req.param(results[i]));
 		}
+		mysql.addToCart(tmp, function(err, results){
+			mysql.fetchShoppingCart(function(err,results){
+				if(err){
+					throw err;
+				}else{
+					ejs.renderFile('displayShoppingCart.ejs',
+							{R: results, P_name : results[0].P_name, S_uname : results[0].S_uname, S_quantity : results[0].S_quantity, S_price : results[0].S_price},
+							function(err, result) {
+								// render on success
+								if (!err) {
+									res.end(result);
+								}
+								// render or error
+								else {
+									res.end('An error occurred');
+									console.log(err);
+								}
+							});
+				}
+			});
+
+		});
+	});
+	console.log(req.param("Laptop"));
 	});
 
+*/
+
+app.post('/addToCart', function (req, res) {
+	var testParam=req.param('1');
+	for(var i=1;i<=6;i++){
+		mysql.insertInCart(i,req.param(i),req,res);
+		}
 });
+
+
+
 
 //from shoppingcart page checkout button to payment options page
 app.post('/checkout', function (req, res) {
