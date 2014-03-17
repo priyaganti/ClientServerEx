@@ -22,17 +22,15 @@
   <td><%=R[i].P_name%>&nbsp;</td>
   <td><%=R[i].S_quantity%>&nbsp;</td>
     <td><%=R[i].S_price%></td>
-    <td><input type="submit" name="removeBtn" value="Remove"/></td>
+    <td>
+    <form action= "/removeProduct/<%=R[i].P_name%>" method="POST"><input type="submit" name="removeBtn" value="Remove"/></form></td>
     
 </tr>
 <% } %>
 </table>
 </form>
-<!--div style="float: left"-->
-   <input type="submit" name="toProducts" value="Back to Products" style="display:inline"/>&nbsp;&nbsp;&nbsp;&nbsp;
-<!--div style="float: left"-->
-   <input type="submit" name="editCart" value="Edit Cart"/>
-   <div style="float: center">
+   <a href="/home" name="toProducts">Back to products</a><br><br>
+ 
   <form action="/checkout" method="POST">
    <input type="submit" name="checkoutBtn" value="Proceed to Checkout"/>
   </form>

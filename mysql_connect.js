@@ -191,7 +191,29 @@ function getProductNames(callback){
 	});
 }
 
+function removeFromCart(P_name,callback){
+	var mysql      = require('mysql');
+	console.log("In remove shopping cart");
+	var connection = mysql.createConnection({
+		host     : 'localhost',
+		user     : 'root',
+		password : 'education9',
+		port: '3306',
+		database: 'test'
+	});
 
+	connection.connect();
+	var sql = "delete FROM ShoppingCart where P_name = '" + P_name + "'";
+	console.log(sql);
+	connection.query(sql, function(err, rows){
+		callback(err, rows);
+	});
+	
+}
+	
+
+
+exports.removeFromCart = removeFromCart;
 exports.insertInCart = insertInCart;
 exports.fetchSpecificProduct = fetchSpecificProduct;
 exports.getProductNames = getProductNames;

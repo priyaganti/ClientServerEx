@@ -27,7 +27,7 @@ app.configure(function () {
 //Inside Login page when click SignIn go to Home page, when click sign up take to SignUp form 
 
 app.get('/loginPage', function (req, res) {
-	  
+
 	ejs.renderFile('loginPage.ejs',
 			{title : title, data : data},
 			function(err, result) {
@@ -73,6 +73,7 @@ app.post('/validate', function (req, res) {
 			//fetchuser call.
 		}
 	} */ 
+
 	mysql.validateUser(function(err,userResults){
 		if(err){
 			console.log("error wrong password");
@@ -97,25 +98,7 @@ app.post('/validate', function (req, res) {
 			//if the cache is already at it's capacity(100), then evict existing users in the cache.
 			//eviction policy -- that's what defines your caching algorithm.
 			//userCache[user] = pw
-			mysql.fetchProducts(function(err,results){
-				if(err){
-					console.log('No products found');
-				}else{
-					ejs.renderFile('home.ejs',
-							{R: results, P_Id : results[0].P_Id, P_name : results[0].P_name, userName: req.session.userName},
-							function(err, result) {
-								// render on success
-								if (!err) {
-									res.end(result);
-								}
-								// render or error
-								else {
-									res.end('An error occurred');
-									console.log(err);
-								}
-							});
-				}
-			});
+			res.redirect('/home');
 		}
 	},req.param('userName'),req.param('Password'));
 	//},req.param('prodName'),req.param('prodDescription'),req.param('prodPrice'));
@@ -141,21 +124,18 @@ app.get('/signUp', function (req, res) {
 });
 
 //Display Home page after signup
-app.post('/home', function (req, res) {
+app.post('/createUser', function (req, res) {
 
 	console.log('just Signed up and now Logged in Home page');
 	mysql.insertNewUser(function(err,results){
 		if(err){
 			throw err;
 		}else{
-			req.session.userName = results[0].uname;
-			mysql.fetchProducts(function(err,results){
+			mysql.validateUser(function(err,userResults){
 				if(err){
-					console.log('No products found');
-				}else{
-
-					ejs.renderFile('home.ejs',
-							{R: results, P_Id : results[0].P_Id, P_name : results[0].P_name, userName: req.session.userName},
+					console.log("error wrong password");
+					ejs.renderFile('InvalidUser.ejs',
+							{title : title, data : data},
 							function(err, result) {
 								// render on success
 								if (!err) {
@@ -167,12 +147,44 @@ app.post('/home', function (req, res) {
 									console.log(err);
 								}
 							});
-				}	
-			});
+				}else{
+					console.log(userResults[0].timeStamp);
+					req.session.userName = userResults[0].uname;
+					//put the user in cache
+					//if the cache is already at it's capacity(100), then evict existing users in the cache.
+					//eviction policy -- that's what defines your caching algorithm.
+					//userCache[user] = pw
+					res.redirect('/home');
+				}
+
+			},req.param('userName'),req.param('password'));
 		}
 
 	},req.param('firstName'),req.param('lastName'),req.param('userName'),req.param('emailId'),req.param('password'));
 
+});
+
+app.get('/home', function(req,res){
+
+	mysql.fetchProducts(function(err,results){
+		if(err){
+			console.log('No products found');
+		}else{
+			ejs.renderFile('home.ejs',
+					{R: results, P_Id : results[0].P_Id, P_name : results[0].P_name, userName: req.session.userName},
+					function(err, result) {
+						// render on success
+						if (!err) {
+							res.end(result);
+						}
+						// render or error
+						else {
+							res.end('An error occurred');
+							console.log(err);
+						}
+					});
+		}
+	});
 });
 
 
@@ -185,21 +197,7 @@ app.post('/addToCart', function (req, res) {
 			console.log(err);
 			res.end(results);
 		}else{
-		mysql.fetchShoppingCart(function(err,results){
-			ejs.renderFile('displayShoppingCart.ejs',
-					{R: results},
-					function(err, result) {
-						// render on success
-						if (!err) {
-							res.end(result);
-						}
-						// render or error
-						else {
-							res.end('An error occurred');
-							console.log(err);
-						}
-					});
-		});
+			res.redirect('/showShoppingCart');
 		}
 	});
 });
@@ -242,6 +240,32 @@ app.post('/payment', function (req, res) {
 
 });
 
+app.post('/removeProduct/:P_name', function (req, res) {
+	
+	mysql.removeFromCart(req.param('P_name'), function(err, results){
+		
+		res.redirect('/showShoppingCart')
+	});
+});
+
+app.get('/showShoppingCart', function(req,res){
+	
+mysql.fetchShoppingCart(function(err,results){
+	ejs.renderFile('displayShoppingCart.ejs',
+			{R: results},
+			function(err, result) {
+				// render on success
+				if (!err) {
+					res.end(result);
+				}
+				// render or error
+				else {
+					res.end('An error occurred');
+					console.log(err);
+				}
+			});
+});
+});
 
 
 app.listen(4242);

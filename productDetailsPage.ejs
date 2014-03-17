@@ -1,0 +1,62 @@
+<html>
+<head>
+<title>homePage</title>
+<style>
+th, td
+{
+padding:2px;
+}
+</style>
+</head>
+<body>
+
+<form action="/loginPage">
+<input type="submit" name="submit" value="Sign Out" style="float:right;"/>
+</form>
+
+<h2>Welcome to the Products details.</h2>
+<form action="/addToCart" method="post">
+<table border="1" style="width:700px">
+<tr>
+  <th>Product ID</th>
+  <th>Product Name</th>
+  <th>Description</th>
+  <th>Price</th>
+  <th>Available Quantity</th>
+  <th>Buy Quantity</th>
+   
+</tr>
+<% for (var i=0; i<R.length; i++) { %>
+<tr>
+<input type="hidden" name="P_Id" value="<%=R[i].P_Id%>">
+<input type="hidden" name="P_price" value="<%=R[i].P_price%>">
+<input type="hidden" name="P_name" value="<%=R[i].P_name%>">
+
+  <td><%=R[i].P_Id%>&nbsp;</td>
+  <td><%=R[i].P_name%>&nbsp;</td>
+  <td><%=R[i].P_description%>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+   <td><%=R[i].P_price%></td>
+   <td><%=R[i].P_quantity%></td>
+   <td>
+   Qty: <select name="P_quantity">
+   <option value="1">1</option>
+  <option value="2">2</option>
+  <option value="3">3</option>
+  <option value="4">4</option>
+  <option value="5">5</option>
+  <option value="6">6</option>
+  <option value="7">7</option>
+  <option value="8">8</option>
+  <option value="9">9</option>
+  <option value="10">10</option>
+
+  </select>
+  </td>  
+</tr>
+<% } %>
+</table><br>
+   <input type="submit" name="cartsubmit" value="Add to Cart"/>
+ </form>
+
+</body>
+</html>
