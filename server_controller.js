@@ -12,6 +12,10 @@ var cachesize = 100;
 var title = 'EJS template with Node.JS';
 var data = 'Data from node';
 
+
+app.use(express.cookieParser());
+app.use(express.session({secret: '1234567890QWERTY'}));
+
 app.configure(function () {
 	app.use(express.bodyParser());
 	app.use(express.methodOverride());
@@ -20,10 +24,10 @@ app.configure(function () {
 	app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
 });
 
-
 //Inside Login page when click SignIn go to Home page, when click sign up take to SignUp form 
 
 app.get('/loginPage', function (req, res) {
+	  
 	ejs.renderFile('loginPage.ejs',
 			{title : title, data : data},
 			function(err, result) {
@@ -39,6 +43,27 @@ app.get('/loginPage', function (req, res) {
 			});
 });
 
+app.get('/showProduct/:id', function (req, res) {
+	mysql.fetchSpecificProduct(req.param('id'), function(err, results){
+
+		ejs.renderFile('productDetailsPage.ejs',
+				{R : results},
+				function(err, result) {
+					// render on success
+					if (!err) {
+						res.end(result);
+					}
+					// render or error
+					else {
+						res.end('An error occurred');
+						console.log(err);
+					}
+				});
+
+	});
+});
+
+
 
 app.post('/validate', function (req, res) {
 	console.log('in /Home page after clicking Sign in from login');
@@ -48,7 +73,7 @@ app.post('/validate', function (req, res) {
 			//fetchuser call.
 		}
 	} */ 
-	mysql.validateUser(function(err,results){
+	mysql.validateUser(function(err,userResults){
 		if(err){
 			console.log("error wrong password");
 			ejs.renderFile('InvalidUser.ejs',
@@ -66,6 +91,8 @@ app.post('/validate', function (req, res) {
 					});
 		}
 		else{
+			console.log(userResults[0].timeStamp);
+			req.session.userName = userResults[0].uname;
 			//put the user in cache
 			//if the cache is already at it's capacity(100), then evict existing users in the cache.
 			//eviction policy -- that's what defines your caching algorithm.
@@ -75,7 +102,7 @@ app.post('/validate', function (req, res) {
 					console.log('No products found');
 				}else{
 					ejs.renderFile('home.ejs',
-							{R: results, P_Id : results[0].P_Id, P_name : results[0].P_name, P_description : results[0].P_description, P_price : results[0].P_price, P_quantity : results[0].P_quantity},
+							{R: results, P_Id : results[0].P_Id, P_name : results[0].P_name, userName: req.session.userName},
 							function(err, result) {
 								// render on success
 								if (!err) {
@@ -115,18 +142,20 @@ app.get('/signUp', function (req, res) {
 
 //Display Home page after signup
 app.post('/home', function (req, res) {
+
 	console.log('just Signed up and now Logged in Home page');
 	mysql.insertNewUser(function(err,results){
 		if(err){
 			throw err;
 		}else{
+			req.session.userName = results[0].uname;
 			mysql.fetchProducts(function(err,results){
 				if(err){
 					console.log('No products found');
 				}else{
 
 					ejs.renderFile('home.ejs',
-							{R: results, P_Id : results[0].P_Id, P_name : results[0].P_name, P_description : results[0].P_description, P_price : results[0].P_price},
+							{R: results, P_Id : results[0].P_Id, P_name : results[0].P_name, userName: req.session.userName},
 							function(err, result) {
 								// render on success
 								if (!err) {
@@ -147,50 +176,33 @@ app.post('/home', function (req, res) {
 });
 
 
-//Sujeet's help code SHOPPING CART 
-/*app.post('/addToCart', function (req, res) {
-	mysql.fetchProducts(function(err,results){
-		var tmp = [];
-		for(var i=0; i<results.length; i++) {
-			tmp.push([results[i].P_name,results[i].P_price,results[i].P_quantity, req.param(results[i])]);
-			//mysql.addToCart(results[i], req.param(results[i]));
-		}
-		mysql.addToCart(tmp, function(err, results){
-			mysql.fetchShoppingCart(function(err,results){
-				if(err){
-					throw err;
-				}else{
-					ejs.renderFile('displayShoppingCart.ejs',
-							{R: results, P_name : results[0].P_name, S_uname : results[0].S_uname, S_quantity : results[0].S_quantity, S_price : results[0].S_price},
-							function(err, result) {
-								// render on success
-								if (!err) {
-									res.end(result);
-								}
-								// render or error
-								else {
-									res.end('An error occurred');
-									console.log(err);
-								}
-							});
-				}
-			});
-
-		});
-	});
-	console.log(req.param("Laptop"));
-	});
-
-*/
-
+//Sujeet's help code SHOPPING CART
 app.post('/addToCart', function (req, res) {
-	var testParam=req.param('1');
-	for(var i=1;i<=6;i++){
-		mysql.insertInCart(i,req.param(i),req,res);
+	console.log('in addToCart');
+	console.log(req.param('P_quantity'));
+	mysql.insertInCart(req.param('P_Id'),req.param('P_quantity'),req.param('P_price'),req.param('P_name'),function(err,results){
+		if(err){
+			console.log(err);
+			res.end(results);
+		}else{
+		mysql.fetchShoppingCart(function(err,results){
+			ejs.renderFile('displayShoppingCart.ejs',
+					{R: results},
+					function(err, result) {
+						// render on success
+						if (!err) {
+							res.end(result);
+						}
+						// render or error
+						else {
+							res.end('An error occurred');
+							console.log(err);
+						}
+					});
+		});
 		}
+	});
 });
-
-
 
 
 //from shoppingcart page checkout button to payment options page

@@ -90,7 +90,7 @@ function fetchProducts(callback){
 	});
 
 	connection.connect();
-	var sql = 'SELECT * FROM Product order by P_Id asc';
+	var sql = 'SELECT P_Id, P_name FROM Product order by P_Id asc';
 	connection.query(sql, function(err, rows, fields){
 		if(rows.length!==0){
 			console.log("DATA : "+JSON.stringify(rows));
@@ -100,7 +100,32 @@ function fetchProducts(callback){
 }
 
 
-function addToCart(arry, callback){
+function fetchSpecificProduct(id,callback){
+	var mysql      = require('mysql');
+	console.log("Inside fetchspecificProduct method");
+	var connection = mysql.createConnection({
+		host     : 'localhost',
+		user     : 'root',
+		password : 'education9',
+		port: '3306',
+		database: 'test'
+	});
+
+	connection.connect();
+	var sql = 'SELECT * FROM Product where P_id = ' + id ;
+	connection.query(sql, function(err, rows, fields){
+		if(rows.length!==0){
+			console.log("DATA : "+JSON.stringify(rows));
+			callback(err, rows);
+		}
+	});
+}
+
+
+
+
+
+function insertInCart(P_Id, P_quantity,P_price,P_name, callback){
 	var mysql      = require('mysql');
 	console.log("Inside addto cart");
 	var connection = mysql.createConnection({
@@ -112,35 +137,15 @@ function addToCart(arry, callback){
 	});
 
 	connection.connect();
-	var sql = "Insert into ShoppingCart values ?";
-	var values = arry;
-	connection.query(sql,[values],function(err){ 
-		callback();
-		
+	var totalPrice = P_quantity * P_price;
+	var sql = "Insert into ShoppingCart (S_quantity,S_price,P_name) values("+P_quantity + ","+ totalPrice + ",'"+ P_name +"' )";
+	console.log(sql);
+	connection.query(sql,function(err, results){ 
+		callback(err, results);	
 	});
+	connection.end();
+	
 }
-
-
-function insertInCart(P_Id, P_quantity){
-	var mysql      = require('mysql');
-	console.log("Inside addto cart");
-	var connection = mysql.createConnection({
-		host     : 'localhost',
-		user     : 'root',
-		password : 'education9',
-		port: '3306',
-		database: 'test'
-	});
-
-	connection.connect();
-	var sql = "Insert into ShoppingCart values ?";
-	var values = arry;
-	connection.query(sql,[values],function(err){ 
-		callback();
-		
-	});
-}
-
 
 
 function fetchShoppingCart(callback){
@@ -155,7 +160,7 @@ function fetchShoppingCart(callback){
 	});
 
 	connection.connect();
-	var sql = 'SELECT P_name,S_uname,S_quantity,S_price FROM ShoppingCart';
+	var sql = 'SELECT P_name, S_quantity, S_price FROM ShoppingCart';
 	connection.query(sql, function(err, rows, fields){
 		if(rows.length!==0){
 			console.log("DATA : "+JSON.stringify(rows));
@@ -187,10 +192,9 @@ function getProductNames(callback){
 }
 
 
-
-
+exports.insertInCart = insertInCart;
+exports.fetchSpecificProduct = fetchSpecificProduct;
 exports.getProductNames = getProductNames;
-exports.addToCart = addToCart;
 exports.connect = connect;
 exports.insertNewUser = insertNewUser;
 exports.validateUser = validateUser;

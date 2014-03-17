@@ -14,48 +14,26 @@ padding:2px;
 <input type="submit" name="submit" value="Sign Out" style="float:right;"/>
 </form>
 
-<h2>Hello, Welcome to the Online Store!</h2>
+<h2>Hello <%=userName%>, Welcome to the Online Store!</h2>
 <form action="/addToCart" method="post">
-<p>Here are the available products<p>
+<p>Your last login: 2014-03-16 16:00:35</p>
+
+<p>Here are the available products on our store.<p>
+
+
 
 <table border="1" style="width:700px">
 <tr>
   <th>Product ID</th>
   <th>Product Name</th>
-  <th>Description</th>
-  <th>Price</th>
-  <th>Available Quantity</th>
-  <th>Buy Quantity</th>
   
 </tr>
 <% for (var i=0; i<R.length; i++) { %>
 <tr>
   <td><%=R[i].P_Id%>&nbsp;</td>
-  <td><%=R[i].P_name%>&nbsp;</td>
-  <td><%=R[i].P_description%>&nbsp;&nbsp;&nbsp;&nbsp;</td>
-   <td><%=R[i].P_price%></td>
-   <td><%=R[i].P_quantity%></td>
-   <td>
-   Qty: <select name="<%=R[i].P_Id%>">
-   <option value="0">0</option>
-   <option value="1">1</option>
-  <option value="2">2</option>
-  <option value="3">3</option>
-  <option value="4">4</option>
-  <option value="5">5</option>
-  <option value="6">6</option>
-  <option value="7">7</option>
-  <option value="8">8</option>
-  <option value="9">9</option>
-  <option value="10">10</option>
-
-  </select>
-  </td>  
+  <td><a href = "/showProduct/<%=R[i].P_Id%>"><%=R[i].P_name%></a></td>
 </tr>
 <% } %>
 </table><br>
-   <input type="submit" name="cartsubmit" value="Add to Cart"/>
- </form>
-
 </body>
 </html>
